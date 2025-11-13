@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fanlar Ro'yxati</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fan Nomi</th>
+                                    <th>Kurs</th>
+                                    <th>O'qituvchi</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in subjects %}
+                                <tr>
+                                    <td>{{ subject.id }}</td>
+                                    <td>{{ subject.subject_name }}</td>
+                                    <td>{{ subject.course_id.course_name }}</td>
+                                    <td>{{ subject.staff_id.first_name }} {{ subject.staff_id.last_name }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_subject' subject.id %}" class="btn btn-success">Tahrirlash</a>
+                                        <a href="{% url 'delete_subject' subject.id %}" class="btn btn-danger">O'chirish</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

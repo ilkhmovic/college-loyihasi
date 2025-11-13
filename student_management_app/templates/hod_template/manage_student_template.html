@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Talabalar Ro'yxati</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ism</th>
+                                    <th>Familiya</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Kurs</th>
+                                    <th>Jins</th>
+                                    <th>Profil Rasmi</th>
+                                    <th>O'quv Yili</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>{{ student.admin.id }}</td>
+                                    <td>{{ student.admin.first_name }}</td>
+                                    <td>{{ student.admin.last_name }}</td>
+                                    <td>{{ student.admin.username }}</td>
+                                    <td>{{ student.admin.email }}</td>
+                                    <td>{{ student.course_id.course_name }}</td>
+                                    <td>{{ student.gender }}</td>
+                                    <td><img src="{{ student.profile_pic }}" style="width: 100px;" /></td>
+                                    <td>{{ student.session_year_id.session_start_year }} - {{ student.session_year_id.session_end_year }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_student' student.admin.id %}" class="btn btn-success">Tahrirlash</a>
+                                        <a href="{% url 'delete_student' student.admin.id %}" class="btn btn-danger">O'chirish</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
