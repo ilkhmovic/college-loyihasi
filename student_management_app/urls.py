@@ -12,7 +12,7 @@ urlpatterns = [
     path('doLogin', views.doLogin, name="doLogin"),
     path('doRegistration', views.doRegistration, name="doRegistration"),
     
-      # URLS for Student
+    # URLS for Student
     path('student_home/', StudentViews.student_home, name="student_home"),
     path('student_view_attendance/', StudentViews.student_view_attendance, name="student_view_attendance"),
     path('student_view_attendance_post/', StudentViews.student_view_attendance_post, name="student_view_attendance_post"),
@@ -24,8 +24,7 @@ urlpatterns = [
     path('student_profile_update/', StudentViews.student_profile_update, name="student_profile_update"),
     path('student_view_result/', StudentViews.student_view_result, name="student_view_result"),
 
-
-     # URLS for Staff
+    # URLS for Staff
     path('staff_home/', StaffViews.staff_home, name="staff_home"),
     path('staff_take_attendance/', StaffViews.staff_take_attendance, name="staff_take_attendance"),
     path('get_students/', StaffViews.get_students, name="get_students"),
@@ -92,5 +91,4 @@ urlpatterns = [
     path('admin_get_attendance_student/', HodViews.admin_get_attendance_student, name="admin_get_attendance_student"),
     path('admin_profile/', HodViews.admin_profile, name="admin_profile"),
     path('admin_profile_update/', HodViews.admin_profile_update, name="admin_profile_update"),
-    
 ]

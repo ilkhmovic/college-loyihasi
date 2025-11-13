@@ -3,18 +3,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-
-
 class SessionYearModel(models.Model):
     id = models.AutoField(primary_key=True)
     session_start_year = models.DateField()
     session_end_year = models.DateField()
     objects = models.Manager()
 
-
-
-# Overriding the Default Django Auth 
-# User and adding One More Field (user_type)
 class CustomUser(AbstractUser):
     HOD = '1'
     STAFF = '2'
@@ -29,14 +23,12 @@ class CustomUser(AbstractUser):
     user_type_data = ((HOD, "HOD"), (STAFF, "Staff"), (STUDENT, "Student"))
     user_type = models.CharField(default=1, choices=user_type_data, max_length=10)
 
-
 class AdminHOD(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
 
 class Staffs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -46,8 +38,6 @@ class Staffs(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
-
 class Courses(models.Model):
     id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=255)
@@ -55,39 +45,30 @@ class Courses(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-  
-
-
 class Subjects(models.Model):
     id =models.AutoField(primary_key=True)
     subject_name = models.CharField(max_length=255)
-    
-    # need to give default course
     course_id = models.ForeignKey(Courses, on_delete=models.CASCADE, default=1) 
     staff_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
-
 class Students(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
     gender = models.CharField(max_length=50)
-    profile_pic = models.FileField(upload_to='profile_pics', null=True, blank=True) # upload_to qo'shildi va null=True
+    # upload_to qo'shildi
+    profile_pic = models.FileField(upload_to='profile_pics/', null=True, blank=True)
     address = models.TextField()
-    course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, null=True, blank=True) # default=1 olib tashlandi
-    session_year_id = models.ForeignKey(SessionYearModel, null=True,
-                                        on_delete=models.CASCADE)
+    # null=True, blank=True qilindi
+    course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, null=True, blank=True)
+    session_year_id = models.ForeignKey(SessionYearModel, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
 class Attendance(models.Model):
-  
-    # Subject Attendance
     id = models.AutoField(primary_key=True)
     subject_id = models.ForeignKey(Subjects, on_delete=models.DO_NOTHING)
     attendance_date = models.DateField()
@@ -96,9 +77,7 @@ class Attendance(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
 class AttendanceReport(models.Model):
-    # Individual Student Attendance
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.DO_NOTHING)
     attendance_id = models.ForeignKey(Attendance, on_delete=models.CASCADE)
@@ -106,7 +85,6 @@ class AttendanceReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
 
 class LeaveReportStudent(models.Model):
     id = models.AutoField(primary_key=True)
@@ -118,7 +96,6 @@ class LeaveReportStudent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
 class LeaveReportStaff(models.Model):
     id = models.AutoField(primary_key=True)
     staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
@@ -129,7 +106,6 @@ class LeaveReportStaff(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
 class FeedBackStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
@@ -138,7 +114,6 @@ class FeedBackStudent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
 
 class FeedBackStaffs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -149,8 +124,6 @@ class FeedBackStaffs(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
-
 class NotificationStudent(models.Model):
     id = models.AutoField(primary_key=True)
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
@@ -159,15 +132,14 @@ class NotificationStudent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
 class NotificationStaffs(models.Model):
     id = models.AutoField(primary_key=True)
-    staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE) # "stafff_id" "staff_id" ga o'zgartirildi
+    # stafff_id -> staff_id ga tuzatildi
+    staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
 
 class StudentResult(models.Model):
     id = models.AutoField(primary_key=True)
@@ -179,8 +151,6 @@ class StudentResult(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
-
-#Creating Django Signals
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -189,12 +159,19 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Staffs.objects.create(admin=instance, address="")
         if instance.user_type == 3:
-            # id=1 bo'yicha qat'iy bog'liqlik olib tashlandi
-            Students.objects.create(admin=instance,
+            # id=1 qat'iy talabi olib tashlandi, keyinroq tahrirlash mumkin
+            Students.objects.create(admin=instance, 
                                     course_id=None, 
-                                    session_year_id=None,
-                                    address="",
-                                    profile_pic="",
+                                    session_year_id=None, 
+                                    address="", 
+                                    profile_pic="", 
                                     gender="")
-    
-# Keraksiz "save_user_profile" signali olib tashlandi.
+
+@receiver(post_save, sender=CustomUser)
+def save_user_profile(sender, instance, **kwargs):
+    if instance.user_type == 1:
+        instance.adminhod.save()
+    if instance.user_type == 2:
+        instance.staffs.save()
+    if instance.user_type == 3:
+        instance.students.save()

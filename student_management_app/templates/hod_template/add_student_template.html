@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Talaba Qo'shish</h3>
+                    </div>
+                    <form role="form" action="{% url 'add_student_save' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {% if messages %}
+                                <div class="form-group">
+                                    <div class="col-12">
+                                        {% for message in messages %}
+                                            {% if message.tags == "error" %}
+                                                <div class="alert alert-danger">{{ message }}</div>
+                                            {% elif message.tags == "success" %}
+                                                <div class="alert alert-success">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% for field in form %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Saqlash</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
