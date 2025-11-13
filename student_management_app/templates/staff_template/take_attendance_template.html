@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Davomat Olish</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Fan</label>
+                            <select class="form-control" name="subject" id="subject">
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>O'quv Yili</label>
+                            <select class="form-control" name="session_year" id="session_year">
+                                {% for session_year in session_years %}
+                                    <option value="{{ session_year.id }}">{{ session_year.session_start_year }} dan {{ session_year.session_end_year }} gacha</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="fetch_student">Talabalarni Yuklash</button>
+                        </div>
+                        <div id="student_data" class="card-footer">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+        $("#fetch_student").click(function(){
+            var subject=$("#subject").val()
+            var session_year=$("#session_year").val()
+
+            $.ajax({
+                url:"{% url 'get_students' %}",
+                type:'POST',
+                data:{subject:subject, session_year:session_year},
+            })
+            .done(function(response){
+                var json_data=JSON.parse(response);
+                var div_data="<div class='form-group'><label>Davomat Sanasi : </label><input type='date' name='attendance_date' id='attendance_date' class='form-control'></div><div class='form-group'><div class='row'>";
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-2'><div class='form-check'><input type='checkbox' checked='checked' name='student_data[]' value='"+json_data[key]['id']+"'><label class='form-check-label'>"+json_data[key]['name']+"</label></div></div>";
+                }
+                div_data+="</div></div>";
+                div_data+="<div class='form-group'><button id='save_attendance' class='btn btn-success btn-block' type='button'>Davomatni Saqlash</button></div>";
+                $("#student_data").html(div_data);
+            })
+            .fail(function(){
+                alert("Xatolik yuz berdi")
+            });
+
+            $(document).on("click","#save_attendance",function(){
+                $(this).attr("disabled","disabled")
+                $(this).text("Saqlanmoqda...")
+                var student_data=$("input[name='student_data[]']").map(function(){
+                    if($(this).is(":checked")){
+                        return {"id":$(this).val(),"status":1};
+                    }
+                    else{
+                        return {"id":$(this).val(),"status":0};
+                    }
+                }).get()
+                var attendance_date=$("#attendance_date").val();
+                var subject_id=$("#subject").val();
+                var session_year_id=$("#session_year").val();
+                
+                student_data=JSON.stringify(student_data)
+
+                $.ajax({
+                    url:"{% url 'save_attendance_data' %}",
+                    type:'POST',
+                    data:{student_ids:student_data, attendance_date:attendance_date, subject_id:subject_id, session_year_id:session_year_id},
+                })
+                .done(function(response){
+                    if(response=="OK"){
+                        alert("Davomat Saqlandi")
+                    }
+                    else{
+                        alert("Davomatni saqlashda xatolik")
+                    }
+                    location.reload()
+                })
+                .fail(function(){
+                    alert("Davomatni saqlashda xatolik")
+                })
+            })
+        })
+    })
+</script>
+{% endblock custom_js %}
+{% endblock content %}

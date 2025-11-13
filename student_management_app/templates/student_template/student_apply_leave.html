@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Ta'til so'rash</h3>
+                    </div>
+                    <form action="{% url 'student_apply_leave_save' %}" method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                             {% if messages %}
+                                <div class="form-group">
+                                    <div class="col-12">
+                                        {% for message in messages %}
+                                            {% if message.tags == "error" %}
+                                                <div class="alert alert-danger">{{ message }}</div>
+                                            {% elif message.tags == "success" %}
+                                                <div class="alert alert-success">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="form-group">
+                                <label>Ta'til Sanasi</label>
+                                <input type="date" name="leave_date" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Sababi</label>
+                                <textarea class="form-control" rows="6" name="leave_message" placeholder="Ta'til sababi..."></textarea>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Ariza Yuborish</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Mening Arizalarim</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Sana</th>
+                                    <th>Xabar</th>
+                                    <th>Holat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in leave_data %}
+                                <tr>
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.leave_date }}</td>
+                                    <td>{{ row.leave_message }}</td>
+                                    <td>
+                                        {% if row.leave_status == 1 %}
+                                            <span class="alert alert-success">Tasdiqlandi</span>
+                                        {% elif row.leave_status == 2 %}
+                                            <span class="alert alert-danger">Rad etildi</span>
+                                        {% else %}
+                                            <span class="alert alert-info">Kutilmoqda</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

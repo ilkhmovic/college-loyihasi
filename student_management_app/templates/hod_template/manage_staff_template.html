@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">O'qituvchilar ro'yxati</h3>
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right" placeholder="Qidiruv">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ism</th>
+                                    <th>Familiya</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Manzil</th>
+                                    <th>Oxirgi kirish</th>
+                                    <th>Qo'shilgan sana</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for staff in staffs %}
+                                <tr>
+                                    <td>{{ staff.admin.id }}</td>
+                                    <td>{{ staff.admin.first_name }}</td>
+                                    <td>{{ staff.admin.last_name }}</td>
+                                    <td>{{ staff.admin.username }}</td>
+                                    <td>{{ staff.admin.email }}</td>
+                                    <td>{{ staff.address }}</td>
+                                    <td>{{ staff.admin.last_login }}</td>
+                                    <td>{{ staff.admin.date_joined }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_staff' staff.admin.id %}" class="btn btn-success">Tahrirlash</a>
+                                        <a href="{% url 'delete_staff' staff.admin.id %}" class="btn btn-danger">O'chirish</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

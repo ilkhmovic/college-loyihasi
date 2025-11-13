@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">O'qituvchi Qo'shish</h3>
+                    </div>
+                    <form role="form" action="{% url 'add_staff_save' %}" method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {% if messages %}
+                                <div class="form-group">
+                                    <div class="col-12">
+                                        {% for message in messages %}
+                                            {% if message.tags == "error" %}
+                                                <div class="alert alert-danger">{{ message }}</div>
+                                            {% elif message.tags == "success" %}
+                                                <div class="alert alert-success">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="email" placeholder="Email kiriting">
+                            </div>
+                            <div class="form-group">
+                                <label>Parol</label>
+                                <input type="password" class="form-control" name="password" placeholder="Parol">
+                            </div>
+                            <div class="form-group">
+                                <label>Ism</label>
+                                <input type="text" class="form-control" name="first_name" placeholder="Ism">
+                            </div>
+                            <div class="form-group">
+                                <label>Familiya</label>
+                                <input type="text" class="form-control" name="last_name" placeholder="Familiya">
+                            </div>
+                            <div class="form-group">
+                                <label>Foydalanuvchi nomi (Username)</label>
+                                <input type="text" class="form-control" name="username" placeholder="Username">
+                            </div>
+                            <div class="form-group">
+                                <label>Manzil</label>
+                                <input type="text" class="form-control" name="address" placeholder="Manzil">
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Qo'shish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

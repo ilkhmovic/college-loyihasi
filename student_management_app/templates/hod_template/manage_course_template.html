@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Kurslar Ro'yxati</h3>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kurs Nomi</th>
+                                    <th>Yaratilgan Sana</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td>{{ course.id }}</td>
+                                    <td>{{ course.course_name }}</td>
+                                    <td>{{ course.created_at }}</td>
+                                    <td>
+                                        <a href="{% url 'edit_course' course.id %}" class="btn btn-success">Tahrirlash</a>
+                                        <a href="{% url 'delete_course' course.id %}" class="btn btn-danger">O'chirish</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
