@@ -25,34 +25,16 @@ class AddStudentForm(forms.Form):
     address = forms.CharField(label="Address",
                               max_length=50,
                               widget=forms.TextInput(attrs={"class":"form-control"}))
-
-    #For Displaying Courses
-    try:
-        courses = Courses.objects.all()
-        course_list = []
-        for course in courses:
-            single_course = (course.id, course.course_name)
-            course_list.append(single_course)
-    except:
-        print("here")
-        course_list = []
-    
-    #For Displaying Session Years
-    try:
-        session_years = SessionYearModel.objects.all()
-        session_year_list = []
-        for session_year in session_years:
-            single_session_year = (session_year.id, str(session_year.session_start_year)+" to "+str(session_year.session_end_year))
-            session_year_list.append(single_session_year)
-            
-    except:
-        session_year_list = []
     
     gender_list = (
         ('Male','Male'),
         ('Female','Female')
     )
     
+    # Bo'sh ro'yxatlarni yaratamiz
+    course_list = []
+    session_year_list = []
+
     course_id = forms.ChoiceField(label="Course",
                                   choices=course_list,
                                   widget=forms.Select(attrs={"class":"form-control"}))
@@ -66,6 +48,25 @@ class AddStudentForm(forms.Form):
                                   required=False,
                                   widget=forms.FileInput(attrs={"class":"form-control"}))
 
+    def __init__(self, *args, **kwargs):
+        super(AddStudentForm, self).__init__(*args, **kwargs)
+        
+        # Ma'lumotlar bazasi so'rovlarini __init__ ichida bajaramiz
+        try:
+            courses = Courses.objects.all()
+            for course in courses:
+                single_course = (course.id, course.course_name)
+                self.fields['course_id'].choices.append(single_course)
+        except:
+            self.fields['course_id'].choices = []
+        
+        try:
+            session_years = SessionYearModel.objects.all()
+            for session_year in session_years:
+                single_session_year = (session_year.id, str(session_year.session_start_year)+" to "+str(session_year.session_end_year))
+                self.fields['session_year_id'].choices.append(single_session_year)
+        except:
+            self.fields['session_year_id'].choices = []
 
 
 class EditStudentForm(forms.Form):
@@ -85,28 +86,10 @@ class EditStudentForm(forms.Form):
                               max_length=50,
                               widget=forms.TextInput(attrs={"class":"form-control"}))
 
-    # For Displaying Courses
-    try:
-        courses = Courses.objects.all()
-        course_list = []
-        for course in courses:
-            single_course = (course.id, course.course_name)
-            course_list.append(single_course)
-    except:
-        course_list = []
+    # Bo'sh ro'yxatlarni yaratamiz
+    course_list = []
+    session_year_list = []
 
-    # For Displaying Session Years
-    try:
-        session_years = SessionYearModel.objects.all()
-        session_year_list = []
-        for session_year in session_years:
-            single_session_year = (session_year.id, str(session_year.session_start_year)+" to "+str(session_year.session_end_year))
-            session_year_list.append(single_session_year)
-            
-    except:
-        session_year_list = []
-
-    
     gender_list = (
         ('Male','Male'),
         ('Female','Female')
@@ -124,3 +107,23 @@ class EditStudentForm(forms.Form):
     profile_pic = forms.FileField(label="Profile Pic",
                                   required=False,
                                   widget=forms.FileInput(attrs={"class":"form-control"}))
+
+    def __init__(self, *args, **kwargs):
+        super(EditStudentForm, self).__init__(*args, **kwargs)
+        
+        # Ma'lumotlar bazasi so'rovlarini __init__ ichida bajaramiz
+        try:
+            courses = Courses.objects.all()
+            for course in courses:
+                single_course = (course.id, course.course_name)
+                self.fields['course_id'].choices.append(single_course)
+        except:
+            self.fields['course_id'].choices = []
+        
+        try:
+            session_years = SessionYearModel.objects.all()
+            for session_year in session_years:
+                single_session_year = (session_year.id, str(session_year.session_start_year)+" to "+str(session_year.session_end_year))
+                self.fields['session_year_id'].choices.append(single_session_year)
+        except:
+            self.fields['session_year_id'].choices = []

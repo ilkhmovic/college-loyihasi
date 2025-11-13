@@ -75,9 +75,9 @@ class Students(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
     gender = models.CharField(max_length=50)
-    profile_pic = models.FileField()
+    profile_pic = models.FileField(upload_to='profile_pics', null=True, blank=True) # upload_to qo'shildi va null=True
     address = models.TextField()
-    course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, default=1)
+    course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, null=True, blank=True) # default=1 olib tashlandi
     session_year_id = models.ForeignKey(SessionYearModel, null=True,
                                         on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -162,7 +162,7 @@ class NotificationStudent(models.Model):
 
 class NotificationStaffs(models.Model):
     id = models.AutoField(primary_key=True)
-    stafff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE)
+    staff_id = models.ForeignKey(Staffs, on_delete=models.CASCADE) # "stafff_id" "staff_id" ga o'zgartirildi
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -182,32 +182,19 @@ class StudentResult(models.Model):
 
 #Creating Django Signals
 @receiver(post_save, sender=CustomUser)
-
-# Now Creating a Function which will
-# automatically insert data in HOD, Staff or Student
 def create_user_profile(sender, instance, created, **kwargs):
-    # if Created is true (Means Data Inserted)
     if created:
-      
-        # Check the user_type and insert the data in respective tables
         if instance.user_type == 1:
             AdminHOD.objects.create(admin=instance)
         if instance.user_type == 2:
-            Staffs.objects.create(admin=instance)
+            Staffs.objects.create(admin=instance, address="")
         if instance.user_type == 3:
+            # id=1 bo'yicha qat'iy bog'liqlik olib tashlandi
             Students.objects.create(admin=instance,
-                                    course_id=Courses.objects.get(id=1),
-                                    session_year_id=SessionYearModel.objects.get(id=1),
+                                    course_id=None, 
+                                    session_year_id=None,
                                     address="",
                                     profile_pic="",
                                     gender="")
     
-
-@receiver(post_save, sender=CustomUser)
-def save_user_profile(sender, instance, **kwargs):
-    if instance.user_type == 1:
-        instance.adminhod.save()
-    if instance.user_type == 2:
-        instance.staffs.save()
-    if instance.user_type == 3:
-        instance.students.save()
+# Keraksiz "save_user_profile" signali olib tashlandi.
