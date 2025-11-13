@@ -1,62 +1,86 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bog'lanish</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <nav class="public-navbar">
+        <div class="brand">College System</div>
+        <div class="links">
+            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Bosh Sahifa</a>
+            <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Kirish</a>
+            <a href="{% url 'registration' %}"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</a>
+        </div>
+    </nav>
 
-{% block content %}
+    <div class="contact-section">
+        <div class="contact-header">
+            <h1>Biz Bilan Bog'laning</h1>
+            <p>Savol yoki takliflaringiz bo'lsa, quyidagi formani to'ldiring.</p>
+        </div>
 
+        <div class="card">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <form action="/contact" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Ismingiz</label>
+                    <input type="text" name="name" class="form-control" placeholder="Ismingizni kiriting" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="Email manzilingiz" required>
+                </div>
+                <div class="form-group">
+                    <label>Mavzu</label>
+                    <select name="subject" class="form-control" required>
+                        <option value="">Mavzuni tanlang</option>
+                        <option value="support">Texnik yordam</option>
+                        <option value="suggestion">Taklif</option>
+                        <option value="complaint">Shikoyat</option>
+                        <option value="other">Boshqa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Xabar</label>
+                    <textarea name="desc" rows="5" class="form-control" placeholder="Xabaringizni yozing..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Yuborish</button>
+            </form>
+        </div>
+        
+        <!-- Aloqa ma'lumotlari qismi -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px;">
+            <div class="card text-center">
+                <i class="fas fa-map-marker-alt" style="font-size: 30px; color: #007bff; margin-bottom: 15px;"></i>
+                <h3>Manzil</h3>
+                <p>Toshkent shahri, Yunusobod tumani</p>
+            </div>
+            <div class="card text-center">
+                <i class="fas fa-phone" style="font-size: 30px; color: #28a745; margin-bottom: 15px;"></i>
+                <h3>Telefon</h3>
+                <p>+998 71 123 45 67</p>
+            </div>
+            <div class="card text-center">
+                <i class="fas fa-envelope" style="font-size: 30px; color: #ffc107; margin-bottom: 15px;"></i>
+                <h3>Email</h3>
+                <p>info@college-system.uz</p>
+            </div>
+        </div>
+    </div>
 
- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                  <a href="/ " class="btn btn-outline-primary my-1 mx-2">Go Back To Home </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="navbar-toggler-icon"></span>
-                    </button>
-                  
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                      <ul class="navbar-nav mr-auto">
-                      
-                      
-                      </ul>
-                      <form class="form-inline my-2 my-lg-0">
-                       <!-- <input class="form-control mr-sm-2" type="login" placeholder="login" aria-label="login">-->
-                       
-       <!--<input class="form-control mr-sm-2" type="Register" placeholder="Register" aria-label="Register">-->
-   
-                         <!--<input class="form-control mr-sm-2" type="register" placeholder="register" aria-label="register">-->
-                        
-                      </form>
-                      <form class="form-inline my-2 my-lg-0">
-                    </div>
-                  </nav>
-<div class="container-fluid px-0">
-
-    <img src="{% static 'dist/img/contact.jpg' %}" class="d-block w-100 mx-0" alt="..." height=450px width=10px>
-</div>
-<div class="container">
-    <h1 class="text-center my-3 display-2">
-        <b>Contact Us</b>
-    </h1>
-<form action="/contact" method="post">
-{% csrf_token %}
-    <div class="mb-3 py-2">
-  <label for="exampleFormControlInput1" class="form-label"><b>Name</b></label>
-  <input type="name" class="form-control" id="exampleFormControlInput1" name = "name" placeholder="Enter your Name">
-</div>
-        <div class="mb-3 py-2">
-            <label for="exampleFormControlInput1" class="form-label"><b>Email id</b></label>
-  <input type="email" class="form-control" id="exampleFormControlInpu2"name = "email" placeholder="Enter your Email">
-</div>
-        <div class="mb-3 py-2">
-            <label for="exampleFormControlInput1" class="form-label"><b>Phone number</b></label>
-  <input type="number" class="form-control" id="exampleFormControlInput3"  name = "phone" placeholder="Enter your Phone number">
-</div>
-<div class="mb-3 py-2">
-    <label for="exampleFormControlTextarea1" class="form-label"><b>How can we help you ??</b></label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" rows="7" name = "desc"></textarea>
-</div>
-
-     <button type="submit" class="btn btn-primary btn-lg ">Submit</button>
-        </form>
-</div>
-
-
-
-{% endblock content%}
+    <footer class="footer">
+        <p>&copy; 2023 College Management System. Barcha huquqlar himoyalangan.</p>
+    </footer>
+</body>
+</html>
